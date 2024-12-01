@@ -1,7 +1,7 @@
 # Trabahanap  
 
 ### Description  
-**Trabahanap** is a Python-based job portal platform that connects job seekers with employers. It provides features for applicants to create profiles, search for job opportunities, and apply for positions. Employers can post job listings and review applications, streamlining the hiring process.  
+**Trabahanap** is a Python-based job portal platform that connects job seekers with employers. It provides features for applicants to create profiles, search for job opportunities, and apply for positions.  
 
 ### Features  
 - User registration and authentication  
