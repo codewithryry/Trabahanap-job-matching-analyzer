@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-xbz7fydv)62dw4ga(4%89nyl05fotrj2spa5!0p)$q=q(@ap@*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['trabahanap-job-matching-analyzer.onrender.com', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
