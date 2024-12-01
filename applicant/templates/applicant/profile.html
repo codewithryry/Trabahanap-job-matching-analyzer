@@ -7,143 +7,188 @@
     {% load static %}
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
-<!-- Navbar Section -->
-<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-  <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center text-center py-0 px-4 px-lg-5">
-      <h1 class="m-0 text-primary">Trabahanap</h1>
-  </a>
-  <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-      <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarCollapse">
-      <div class="navbar-nav ms-auto p-4 p-lg-0">
-          <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
-      </div>
-      <!-- Authentication Section -->
-      {% if user.is_authenticated %}
-          <span class="navbar-nav p-4 p-lg-0 nav-item nav-link text-dark me-3">Welcome, {{ user.username }}</span>
-          <a href="{% url 'logout' %}" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Logout</a>
-      {% else %}
-          <a href="{% url 'login' %}" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Login<i class="fa fa-sign-in-alt ms-3"></i></a>
-      {% endif %}
-  </div>
-</nav>
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center text-center py-0 px-4 px-lg-5">
+            <h1 class="m-0 text-primary">Trabahanap</h1>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-
-
-    <!-- Main Content Section with Sidebar -->
-    <div class="container-fluid" style="margin-top: 20px;"> <!-- Added margin-top to avoid navbar overlap -->
-        <div class="row">
-            <!-- Sidebar Section -->
-            <div class="col-lg-3 col-md-4 col-12 bg-light p-4">
-                <ul class="nav flex-column">
-                  <li class="nav-item">
-                    <a class="nav-link active" href="#">Job Recommendations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#personalInfoModal">Personal Information</a>
-                </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#">Education</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Experience</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Skills</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Projects</a>
-                    </li> -->
-                </ul>
-            </div>
-
-            <!-- Main Content Section -->
-            <div class="col-lg-9 col-md-8 col-12">
-                {% block content %}
-                <!-- Job Recommendations Section (Visible on Main Page) -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="my-4">Job Recommendations</h2>
-                        {% if job_recommendations %}
-                        <div class="row">
-                            {% for job in job_recommendations %}
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="card shadow-sm h-100">
-                                    <div class="card-body">
-                                        <h4 class="card-title">{{ job.title }}</h4>
-                                        <p class="card-text">{{ job.description|truncatewords:30 }}</p>
-                                        <a href="#" class="btn btn-primary mt-3">Apply</a>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% else %}
-                        <p>No job recommendations available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endblock %}
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="d-flex ms-auto align-items-center p-4 p-lg-0">
+                <!-- Personalized Greeting with Icon -->
+                <span class="nav-item nav-link text-dark me-3">
+                    <i class="fa fa-user-circle me-2"></i> <!-- User Icon -->
+                    Hello,{{ user.username }}! 
+                    {% if user.role %}
+                        <small class="text-muted">({{ user.role }})</small>
+                    {% endif %}
+                </span>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="btn btn-primary rounded-0 py-4 px-lg-5">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary rounded-0 py-4 px-lg-5">Login<i class="fa fa-sign-in-alt ms-3"></i></a>
+                {% endif %}
             </div>
         </div>
+        
+        
+        
+    </nav>
+    
+      
+
+<!-- Main Content Section with Sidebar -->
+<div class="container-fluid" style="margin-top: 20px;"> <!-- Added margin-top to avoid navbar overlap -->
+    <div class="row">
+        <!-- Sidebar Section -->
+        <div class="col-lg-3 col-md-4 col-12 bg-light p-4">
+            <ul class="nav flex-column">
+                <li class="nav-item" style="margin-bottom: -20px;">
+                    <a class="nav-link active" href="#" id="personalInfoLink" style="font-size: 18px;">Personal Information</a>
+                </li>
+                <li class="nav-item" style="margin-bottom: -20px;">
+                    <a class="nav-link" href="#" id="editPersonalInfoLink" data-bs-toggle="modal" data-bs-target="#personalInfoModal" style="font-size: 18px;">Edit Personal Information</a>
+                </li>
+            </ul>
+        </div>
+        <style>
+            .nav-link {
+                font-size: 18px; /* Adjust the size to your preference */
+            }
+        </style>
+        
+        
+
+        <!-- Main Content Section -->
+        <div class="col-lg-9 col-md-8 col-12">
+            {% block content %}
+            <!-- Personal Information Section (Visible on Main Page) -->
+           <!-- Personal Information Section (Visible on Main Page) -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6 applicant-info"> <!-- Added applicant-info class -->
+                    <h2 class="section-header">Personal Information</h2>
+                    <br>
+                    <p><strong>Name:</strong> {{ applicant.name }}</p>
+                    <p><strong>Email:</strong> {{ applicant.email }}</p>
+                    <p><strong>Skills:</strong> {{ applicant.skills }}</p>
+                    <p><strong>Experience:</strong> {{ applicant.experience }}</p>
+                </div>                    
+            </div>
+        </div>
+        <style>
+            /* Apply a slightly larger font size to the applicant information */
+            .applicant-info p {
+                font-size: 1.2rem; /* Increase the font size slightly */
+                line-height: 1.6;  /* Adjust line height for better readability */
+            }
+
+            .applicant-info strong {
+                font-weight: 600; /* Keep the label text bold */
+            }
+        </style>
+
+
+ <!-- Job Recommendations Section (Visible after Personal Information) -->
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h2 class="my-4">Job Recommendations</h2>
+        {% if job_recommendations %}
+        <div class="row">
+            {% for job in job_recommendations %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <!-- Display the Job Role as the title -->
+                        <h4 class="card-title">{{ job.job_role }}</h4>
+
+                        <!-- Other job details -->
+                        <p class="card-text"><strong>Job Role:</strong> {{ job.job_role }}</p>
+                        <p class="card-text"><strong>Company:</strong> {{ job.company }}</p>
+                        <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
+                        <p class="card-text"><strong>Experience Required:</strong> {{ job.job_experience }}</p>
+                        <p class="card-text"><strong>Skills/Description:</strong> {{ job.skills_description|truncatewords:30 }}</p>
+                        <!-- <a href="#" class="btn btn-primary mt-3">Apply</a> -->
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No job recommendations available.</p>
+        {% endif %}
     </div>
+</div>
 
-    <!-- Custom Styles for Layout -->
-    <style>
-      /* Job Item Cards Styling */
+<!-- Recommendation Precision
+{% if recommendation_precision %}
+<div class="mt-4">
+    <h3>Recommendation Precision: {{ recommendation_precision|floatformat:2 }}</h3>
+</div>
+{% endif %} -->
+
+{% endblock %}
+</div>
+
+<!-- Custom Styles for Layout -->
+<style>
+  /* Job Item Cards Styling */
+  .card {
+      border-radius: 10px;
+  }
+
+  .card-body {
+      padding: 20px;
+  }
+
+  .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+  }
+
+  .card-text {
+      color: #555;
+  }
+
+  .btn-primary {
+      width: 100%;
+  }
+
+  .my-4 {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+  }
+
+  /* Sidebar Styles */
+  .nav-item {
+      padding: 10px 0;
+  }
+
+  .nav-link {
+      color: #555;
+  }
+
+  .nav-link.active {
+      color: #007bff;
+      font-weight: bold;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 767px) {
       .card {
-          border-radius: 10px;
+          margin-bottom: 15px;
       }
+  }
+</style>
 
-      .card-body {
-          padding: 20px;
-      }
-
-      .card-title {
-          font-size: 1.25rem;
-          font-weight: bold;
-      }
-
-      .card-text {
-          color: #555;
-      }
-
-      .btn-primary {
-          width: 100%;
-      }
-
-      .my-4 {
-          margin-top: 2rem;
-          margin-bottom: 2rem;
-      }
-
-      /* Sidebar Styles */
-      .nav-item {
-          padding: 10px 0;
-      }
-
-      .nav-link {
-          color: #555;
-      }
-
-      .nav-link.active {
-          color: #007bff;
-          font-weight: bold;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 767px) {
-          .card {
-              margin-bottom: 15px;
-          }
-      }
-    </style>
-<!-- Modal for Personal Information Form -->
 <div class="modal fade" id="personalInfoModal" tabindex="-1" aria-labelledby="personalInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog custom-modal-size">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="personalInfoModalLabel">Edit Personal Information</h5>
@@ -152,73 +197,63 @@
             <div class="modal-body">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="row">
-                        <!-- Name -->
-                        <div class="col-md-6 mb-3">
+                    <!-- Full Name -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="name" class="form-label">Full Name</label>
                             <input 
                                 type="text" 
                                 class="form-control" 
                                 id="name" 
                                 name="name" 
-                                placeholder="Enter your full name" 
                                 value="{{ applicant.name }}" 
+                                placeholder="Enter your full name" 
                                 required>
                         </div>
+                    </div>
 
-                        <!-- Email -->
-                        <div class="col-md-6 mb-3">
+                    <!-- Email -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="email" class="form-label">Email</label>
                             <input 
                                 type="email" 
                                 class="form-control" 
                                 id="email" 
                                 name="email" 
-                                placeholder="Enter your email" 
                                 value="{{ applicant.email }}" 
+                                placeholder="Enter your email" 
                                 required>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <!-- Skills -->
-                        <div class="col-md-6 mb-3">
+                    <!-- Skills -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="skills" class="form-label">Skills</label>
                             <textarea 
                                 class="form-control" 
                                 id="skills" 
                                 name="skills" 
-                                placeholder="List your skills" 
-                                rows="3">{{ applicant.skills }}</textarea>
+                                rows="3" 
+                                placeholder="List your skills">{{ applicant.skills }}</textarea>
                         </div>
+                    </div>
 
-                        <!-- Experience -->
-                        <div class="col-md-6 mb-3">
+                    <!-- Experience -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <label for="experience" class="form-label">Experience</label>
                             <textarea 
                                 class="form-control" 
                                 id="experience" 
                                 name="experience" 
-                                placeholder="Describe your experience" 
-                                rows="3">{{ applicant.experience }}</textarea>
+                                rows="3" 
+                                placeholder="Describe your experience">{{ applicant.experience }}</textarea>
                         </div>
                     </div>
-
-                    <!-- Resume -->
-                    <div class="mb-3">
-                        <label for="resume" class="form-label">Upload Resume</label>
-                        <input 
-                            type="file" 
-                            class="form-control" 
-                            id="resume" 
-                            name="resume">
-                        {% if applicant.resume %}
-                            <p>Current File: <a href="{{ applicant.resume.url }}" target="_blank">{{ applicant.resume.name }}</a></p>
-                        {% endif %}
-                    </div>
-
+                    <!-- Submit Button -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
@@ -226,8 +261,64 @@
         </div>
     </div>
 </div>
+</div>
 
+
+<style>
+    /* Ensure consistent font size for inputs, textareas, and their placeholders */
+    .form-control, .form-control::placeholder {
+        font-size: 1rem;  /* Set a standard font size for inputs and placeholders */
+        padding: 10px;    /* Padding inside the fields for better alignment */
+    }
+
+    /* Adjust textareas height and font size */
+    .form-control[rows] {
+        height: auto;
+        padding: 10px;
+    }
+
+    /* Set consistent styling for the modal */
+    .modal-dialog.custom-modal-size {
+        max-width: 600px;  /* Adjust max-width of the modal */
+        width: 100%;       /* Ensure it uses full available width, but not too wide */
+    }
+
+    /* Modal content adjustments */
+    .modal-content {
+        border-radius: 8px;  /* Rounded corners for the modal */
+    }
+
+    /* Consistent height and padding for buttons */
+    .modal-footer .btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+
+    /* Placeholder specific style for textareas and inputs */
+    .form-control::placeholder {
+        color: #999; /* Light grey placeholder color */
+        opacity: 1;  /* Ensure opacity is set to fully visible */
+    }
+</style>
+
+
+<script>
+    // Add event listeners to the sidebar links
+    document.querySelectorAll('.nav-link').forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Remove active class from all links
+        document.querySelectorAll('.nav-link').forEach(function(link) {
+          link.classList.remove('active');
+        });
+  
+        // Add active class to the clicked link
+        this.classList.add('active');
+      });
+    });
+  </script>
+  
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 
 </body>

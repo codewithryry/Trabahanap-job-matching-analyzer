@@ -13,14 +13,13 @@ class Applicant(models.Model):
     def __str__(self):
         return self.name
 
-
 class Job(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    required_skills = models.TextField()  # Skills required for the job
+    job_role = models.CharField(max_length=255, default="Unknown Role")
+    company = models.CharField(max_length=255, default="Unknown")
+    location = models.CharField(max_length=255, default="Not specified")
+    job_experience = models.CharField(max_length=255, default="Not specified")
+    skills_description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
-
-        
+        return self.job_role

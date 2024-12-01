@@ -20,4 +20,5 @@ urlpatterns = [
     path('testimonials/', views.testimonial, name='testimonial'),  # Testimonials
     path('index/', views.index,  name='index'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
+    
 ]

@@ -127,6 +127,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [
+    r"C:\Users\reymel mislang\OneDrive\Desktop\jobfit\applicant\static",
+]
+
+# Add this to your settings.py
+STATIC_URL = '/static/'
+
+# Define the directory where static files will be stored after running collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Default primary key field type
