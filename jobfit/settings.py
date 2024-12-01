@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add this line
 ]
 
 ROOT_URLCONF = 'jobfit.urls'
@@ -126,17 +127,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_DIRS = [
-    r"C:\Users\reymel mislang\OneDrive\Desktop\jobfit\applicant\static",
-]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Add this to your settings.py
-STATIC_URL = '/static/'
+# Ensure STATIC settings are correctly configured
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Collect static files here
 
-# Define the directory where static files will be stored after running collectstatic
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [BASE_DIR / "static"]
+# STATICFILES_DIRS = [
+#     r"C:\Users\reymel mislang\OneDrive\Desktop\jobfit\applicant\static",
+# ]
+
+# # Add this to your settings.py
+# STATIC_URL = '/static/'
+
+# # Define the directory where static files will be stored after running collectstatic
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Default primary key field type
