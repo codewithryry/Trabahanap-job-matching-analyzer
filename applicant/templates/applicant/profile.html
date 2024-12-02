@@ -55,8 +55,20 @@
                 <li class="nav-item" style="margin-bottom: -20px;">
                     <a class="nav-link" href="#" id="editPersonalInfoLink" data-bs-toggle="modal" data-bs-target="#personalInfoModal" style="font-size: 18px;">Edit Personal Information</a>
                 </li>
+                <!-- Detailed Reports and History of Job Matches Button -->
+                <li class="nav-item" style="margin-bottom: -20px;">
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#jobMatchHistoryModal" style="font-size: 18px;">View Job Match History</a>
+                </li>
+                <!-- Feedback Button -->
+                <li class="nav-item" style="margin-bottom: -20px;">
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#feedbackModal" style="font-size: 18px;">Give Feedback</a>
+                </li>
+                
+                
             </ul>
         </div>
+        
+
         <style>
             .nav-link {
                 font-size: 18px; /* Adjust the size to your preference */
@@ -65,14 +77,13 @@
         
         
 
-        <!-- Main Content Section -->
-        <div class="col-lg-9 col-md-8 col-12">
-            {% block content %}
-            <!-- Personal Information Section (Visible on Main Page) -->
-           <!-- Personal Information Section (Visible on Main Page) -->
+<!-- Main Content Section -->
+<div class="col-lg-9 col-md-8 col-12">
+    {% block content %}
+        <!-- Personal Information Section (Visible on Main Page) -->
         <div class="row">
             <div class="col-md-12">
-                <div class="col-md-6 applicant-info"> <!-- Added applicant-info class -->
+                <div class="col-md-6 applicant-info">
                     <h2 class="section-header">Personal Information</h2>
                     <br>
                     <p><strong>Name:</strong> {{ applicant.name }}</p>
@@ -82,58 +93,67 @@
                 </div>                    
             </div>
         </div>
+
         <style>
             /* Apply a slightly larger font size to the applicant information */
             .applicant-info p {
-                font-size: 1.2rem; /* Increase the font size slightly */
-                line-height: 1.6;  /* Adjust line height for better readability */
+                font-size: 1.1rem;  /* Slightly smaller font size to reduce space */
+                line-height: 1.4;  /* Adjust line height for better readability */
+                margin-bottom: 10px; /* Reduce space between paragraphs */
             }
 
             .applicant-info strong {
                 font-weight: 600; /* Keep the label text bold */
             }
+
+            /* Job Recommendations Section */
+            .job-recommendations {
+                margin-top: 30px;  /* Reduced top margin */
+            }
+
+            .card {
+                margin-bottom: 20px;  /* Reduced margin-bottom for cards */
+            }
+
+            /* For smaller screens, adjust the layout */
+            @media (max-width: 767px) {
+                .applicant-info p {
+                    font-size: 1rem;  /* Reduce font size on mobile */
+                    line-height: 1.5;
+                }
+
+                .card {
+                    margin-bottom: 15px;  /* Adjust margin on mobile */
+                }
+            }
         </style>
 
-
- <!-- Job Recommendations Section (Visible after Personal Information) -->
-<div class="row mt-5">
-    <div class="col-md-12">
-        <h2 class="my-4">Job Recommendations</h2>
-        {% if job_recommendations %}
-        <div class="row">
-            {% for job in job_recommendations %}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <!-- Display the Job Role as the title -->
-                        <h4 class="card-title">{{ job.job_role }}</h4>
-
-                        <!-- Other job details -->
-                        <p class="card-text"><strong>Job Role:</strong> {{ job.job_role }}</p>
-                        <p class="card-text"><strong>Company:</strong> {{ job.company }}</p>
-                        <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
-                        <p class="card-text"><strong>Experience Required:</strong> {{ job.job_experience }}</p>
-                        <p class="card-text"><strong>Skills/Description:</strong> {{ job.skills_description|truncatewords:30 }}</p>
-                        <!-- <a href="#" class="btn btn-primary mt-3">Apply</a> -->
+        <!-- Job Recommendations Section -->
+        <div class="row job-recommendations">
+            <div class="col-md-12">
+                <h2 class="my-3">Job Recommendations</h2>  <!-- Reduced top margin for the title -->
+                {% if job_recommendations %}
+                    <div class="row">
+                        {% for job in job_recommendations %}
+                            <div class="col-lg-4 col-md-6 mb-3">  <!-- Reduced margin-bottom here -->
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body">
+                                        <h4 class="card-title">{{ job.job_role }}</h4>
+                                        <p class="card-text"><strong>Company:</strong> {{ job.company }}</p>
+                                        <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
+                                        <p class="card-text"><strong>Experience Required:</strong> {{ job.job_experience }}</p>
+                                        <p class="card-text"><strong>Skills/Description:</strong> {{ job.skills_description|truncatewords:30 }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                </div>
+                {% else %}
+                    <p>No job recommendations available.</p>
+                {% endif %}
             </div>
-            {% endfor %}
         </div>
-        {% else %}
-        <p>No job recommendations available.</p>
-        {% endif %}
-    </div>
-</div>
-
-<!-- Recommendation Precision
-{% if recommendation_precision %}
-<div class="mt-4">
-    <h3>Recommendation Precision: {{ recommendation_precision|floatformat:2 }}</h3>
-</div>
-{% endif %} -->
-
-{% endblock %}
+    {% endblock %}
 </div>
 
 <!-- Custom Styles for Layout -->
@@ -243,7 +263,7 @@
                     <!-- Experience -->
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="experience" class="form-label">Experience</label>
+                            <label for="experience" class="form-label">Years Experience</label>
                             <textarea 
                                 class="form-control" 
                                 id="experience" 
@@ -262,6 +282,120 @@
     </div>
 </div>
 </div>
+
+
+<!-- Feedback Modal -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedbackModalLabel">Give Feedback</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="feedbackForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="feedbackRating" class="form-label">Rating</label>
+                        <select class="form-select" id="feedbackRating" required>
+                            <option value="" selected disabled>Select Rating</option>
+                            <option value="1">1 - Poor</option>
+                            <option value="2">2 - Fair</option>
+                            <option value="3">3 - Good</option>
+                            <option value="4">4 - Very Good</option>
+                            <option value="5">5 - Excellent</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedbackComments" class="form-label">Comments</label>
+                        <textarea class="form-control" id="feedbackComments" rows="4" placeholder="Share your thoughts..." required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedbackSuggestions" class="form-label">Suggestions for Improvement</label>
+                        <textarea class="form-control" id="feedbackSuggestions" rows="3" placeholder="Any suggestions?" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submitFeedbackBtn">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Job Match History Modal -->
+<div class="modal fade" id="jobMatchHistoryModal" tabindex="-1" aria-labelledby="jobMatchHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen"> <!-- Fullscreen modal class -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="jobMatchHistoryModalLabel">Job Match History</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul>
+            {% for recommendation in applicant.jobrecommendation_set.all %}
+              <li>
+                <strong>{{ recommendation.applicant.user.first_name }} {{ recommendation.applicant.user.last_name }}</strong> |
+                Job: {{ recommendation.job.job_role }} |
+                Similarity: {{ recommendation.similarity_score|floatformat:4 }}
+              </li>
+            {% empty %}
+              <li>No job matches found.</li>
+            {% endfor %}
+          </ul>
+  
+          <!-- Total Similarity -->
+          <div class="mt-3">
+            <strong>Total Similarity Score:</strong> 
+            {{ total_similarity|floatformat:4 }}
+          </div>
+  
+          <!-- Recommendation Precision -->
+          <div class="mt-3">
+            <strong>Latest Precision:</strong> {{ recommendation_precision|floatformat:4 }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+<script>
+ document.getElementById('submitFeedbackBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    // Collect form data
+    var feedbackData = {
+        feedbackRating: document.getElementById('feedbackRating').value,
+        feedbackComments: document.getElementById('feedbackComments').value,
+        feedbackSuggestions: document.getElementById('feedbackSuggestions').value,
+        applicantId: "{{ user.applicant.id }}" // Ensure `user` is passed in the context and contains an `applicant` object
+    };
+
+    // Make AJAX request
+    fetch('/submit-feedback/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: JSON.stringify(feedbackData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message); // Success message
+            $('#feedbackModal').modal('hide'); // Hide modal after submission
+        }
+    })
+    .catch(error => {
+        alert('Error submitting feedback');
+    });
+});
+
+</script>
+
 
 
 <style>
@@ -315,6 +449,7 @@
         this.classList.add('active');
       });
     });
+
   </script>
   
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>

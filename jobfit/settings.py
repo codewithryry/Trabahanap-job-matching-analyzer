@@ -26,8 +26,16 @@ SECRET_KEY = 'django-insecure-xbz7fydv)62dw4ga(4%89nyl05fotrj2spa5!0p)$q=q(@ap@*
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = [
+    'trabahanap-job-matching-analyzer.onrender.com',  # Render app hostname
+    'localhost',  # For local development
+    '127.0.0.1',  # For local development
+    '0.0.0.0'
+    '*',  # Allow all hosts (use with caution, for development)
+]
 
-ALLOWED_HOSTS = ['trabahanap-job-matching-analyzer.onrender.com', 'localhost', '127.0.0.1']
+
+
 
 
 
@@ -64,7 +72,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates',  # Add this line
+            os.path.join(BASE_DIR, 'templates'),  # Make sure your templates are inside the 'templates' directory
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -77,7 +85,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 WSGI_APPLICATION = 'jobfit.wsgi.application'
 
@@ -135,6 +142,14 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"  # Collect static files here
 
 
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Static files configuration
+STATIC_URL = '/static/'
+
+# Static files directory for collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # This is where collectstatic will place the files
 # STATIC_URL = '/static/'
 # STATICFILES_DIRS = [BASE_DIR / "static"]
 # STATICFILES_DIRS = [

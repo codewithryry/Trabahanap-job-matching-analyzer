@@ -1,7 +1,9 @@
+from django.contrib import admin
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 from . import views
 from .views import CustomLogoutView
+
 
 
 
@@ -19,6 +21,6 @@ urlpatterns = [
     path('job-list/', views.job_list, name='job-list'),  # Job list
     path('testimonials/', views.testimonial, name='testimonial'),  # Testimonials
     path('index/', views.index,  name='index'),
-    path('logout/', CustomLogoutView.as_view(), name='logout'),
-    
+    path('logout/', CustomLogoutView.as_view(), name='logout'),  
+     path('submit-feedback/', views.submit_feedback, name='submit_feedback'),
 ]
