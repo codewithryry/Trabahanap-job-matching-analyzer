@@ -124,15 +124,13 @@ def profile(request):
 
                 # Update progress for each recommendation saved (in this case, 100% is reached after 6 jobs)
                 progress = int(((idx + 1) / len(job_recommendations)) * 100)
+                print(f"Job Recommendations for Applicant: {applicant.user.username}\n{'-'*60}")
+                for idx, (job, score) in enumerate(zip(job_recommendations, similarity_scores), start=1):
+                    print(f"{idx}. Job: {job.job_role} at {job.company} | Similarity Score: {score:.4f}")
+                print(f"{'-'*60}\nTotal Similarity Score: {total_similarity:.4f}")
+                print(f"Recommendation Precision: {recommendation_precision * 100:.2f}%\n")
 
-        # Display recommendations and other details on the terminal
-        print(f"Job Recommendations for Applicant {applicant.user.username}:")
-        for job, score in zip(job_recommendations, similarity_scores):
-            print(f"Job: {job.job_role} at {job.company}, Similarity Score: {score}")
-        
-        print(f"Total Similarity: {total_similarity}")
-        print(f"Recommendation Precision: {recommendation_precision * 100:.2f}%")
-    
+                    
     if request.method == 'POST':
         form = ApplicantProfileForm(request.POST, request.FILES, instance=applicant)
         if form.is_valid():
@@ -182,14 +180,18 @@ def profile(request):
 
                         # Update progress for each recommendation saved
                         progress = int(((idx + 1) / len(job_recommendations)) * 100)
+                        # Display updated recommendations on terminal
+                        print(f"Updated Job Recommendations for Applicant {applicant.user.username}:")
+                        for job, score in zip(job_recommendations, similarity_scores):
+                            print(f"Job: {job.job_role} at {job.company}, Similarity Score: {score}")
 
-                # Display updated recommendations on terminal
-                print(f"Updated Job Recommendations for Applicant {applicant.user.username}:")
-                for job, score in zip(job_recommendations, similarity_scores):
-                    print(f"Job: {job.job_role} at {job.company}, Similarity Score: {score}")
+                        print(f"Total Similarity: {total_similarity}")
+                        if recommendation_precision == 1.0:
+                          print("Recommendation Precision: 1.0000")
+                        else:
+                          print(f"Recommendation Precision: {recommendation_precision * 100:.2f}%")
 
-                print(f"Total Similarity: {total_similarity}")
-                print(f"Recommendation Precision: {recommendation_precision * 100:.2f}%")
+
 
             return redirect('profile')  # Redirect to profile after saving
     else:
