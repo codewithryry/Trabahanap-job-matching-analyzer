@@ -4,6 +4,7 @@ from django.db import models
 
 class Applicant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, default='applicant')  # Ensure this field exists 
     name = models.CharField(max_length=100)
     email = models.EmailField()
     skills = models.TextField()
