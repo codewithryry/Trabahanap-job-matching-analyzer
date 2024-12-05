@@ -383,14 +383,15 @@ def view_applicant(request):
         # Show applicant-specific data
         return render(request, 'applicant_dashboard.html')
 
+@login_required
 def apply_now(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     applicant = get_object_or_404(Applicant, user=request.user)
 
     if request.method == 'POST':
-        cover_letter = request.POST.get('cover_letter')
+        cover_letter = request.POST.get('cover_letter', '').strip()  # Trim whitespace
 
-        if cover_letter:
+        if cover_letter:  # Check if cover letter is not empty
             # Save the job application with the cover letter
             job_application = JobApplication.objects.create(
                 applicant=applicant,
@@ -408,7 +409,6 @@ def apply_now(request, job_id):
                 'application_date': job_application.application_date.strftime('%b %d, %Y, %I:%M %p'),
                 'application_id': job_application.id,  # Pass application_id in response
             }
-
             return JsonResponse(data)
         else:
             # If no cover letter is provided
@@ -421,7 +421,7 @@ def apply_now(request, job_id):
         'job': job,
         'applicant': applicant,
     })
-
+    
 
 def job_application_status(request, application_id):
     jobapplication = get_object_or_404(JobApplication, id=application_id)

@@ -150,34 +150,38 @@
 
 
 <script>
-    $(document).ready(function () {
-        // Form submission logic (AJAX)
-        $('#applyForm').on('submit', function (event) {
-            event.preventDefault(); // Prevent default form submission
+$(document).ready(function () {
+    // Form submission logic (AJAX)
+    $('#applyForm').on('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
 
-            // Send AJAX request
-            $.ajax({
-                type: 'POST',
-                url: $(this).attr('action'),
-                data: $(this).serialize(),
-                dataType: 'json', // Ensure response is treated as JSON
-                success: function (response) {
-                    if (response.status === 'success') {
-                        // Show the application modal after successful submission
-                        $('#applicationModal').modal('show');
+        // Send AJAX request
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            dataType: 'json', // Ensure response is treated as JSON
+            success: function (response) {
+                if (response.status === 'success') {
+                    // Show success message
+                    alert(response.message);
 
-                        // Redirect to job application status page
-                        window.location.href = response.redirect_url;
-                    } else {
-                        alert('There was an issue with your submission. Please try again.');
-                    }
-                },
-                error: function () {
-                    alert('There was an error submitting the application.');
+                    // Optionally, show the application modal or update the UI
+                    $('#applicationModal').modal('show');
+
+                    // Redirect to application status page
+                    window.location.href = '/job-status/' + response.application_id;
+                } else {
+                    // Show error message if the application fails
+                    alert(response.message);
                 }
-            });
+            },
+            error: function () {
+                alert('There was an error submitting the application.');
+            }
         });
     });
+});
 
 // Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', function () {
