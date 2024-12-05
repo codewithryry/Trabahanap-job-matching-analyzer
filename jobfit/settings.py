@@ -71,10 +71,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),  # Make sure your templates are inside the 'templates' directory
-        ],
-        'APP_DIRS': True,
+        'DIRS': [],  # Add custom directories if needed
+        'APP_DIRS': True,  # Enables Django to find templates in app directories
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',

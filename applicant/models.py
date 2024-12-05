@@ -50,3 +50,25 @@ class JobRecommendation(models.Model):
 
     def __str__(self):
         return f'{self.applicant.name} - {self.job.job_role}'
+
+
+# class JobApplication(models.Model):
+#     applicant = models.ForeignKey('Applicant', on_delete=models.CASCADE)
+#     job = models.ForeignKey('Job', on_delete=models.CASCADE)
+#     cover_letter = models.TextField()
+#     application_date = models.DateTimeField(auto_now_add=True)
+
+#     def __str__(self):
+#         return f'Application from {self.applicant.name} for {self.job.job_role}'
+
+
+
+class JobApplication(models.Model):
+    applicant = models.ForeignKey('Applicant', on_delete=models.CASCADE)
+    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    cover_letter = models.TextField()
+    application_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=100, default='Pending')  # Default status
+
+    def __str__(self):
+        return f'Application from {self.applicant.name} for {self.job.job_role}'

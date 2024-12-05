@@ -22,6 +22,12 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Feedback
 import json
 from .models import JobRecommendation
+from django.http import HttpResponse
+from django.contrib import messages  # Add this import
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
+from .models import Job, Applicant, JobApplication
+
 
 
 def is_admin(user):
@@ -217,10 +223,11 @@ def register(request):
             user = form.save()
             login(request, user)
 
-            # Set status manually here (default is 'applicant')
-            Applicant.objects.create(user=user, status='applicant')  # Or 'staff' / 'admin'
+            # Create the Applicant instance with default status
+            applicant = Applicant.objects.create(user=user, status='applicant')
 
-            return redirect('profile')  # Redirect to profile after registering
+            # Redirect to the profile page directly to update personal information
+            return redirect('profile')  # Redirect directly to the profile page to complete the profile
     else:
         form = UserCreationForm()
     return render(request, 'applicant/register.html', {'form': form})
@@ -238,39 +245,31 @@ def login_view(request):
             return render(request, 'applicant/login.html', {'error': 'Invalid credentials'})
     return render(request, 'applicant/login.html')
 
-
+@login_required
 def edit_personal_info(request):
-    applicant, created = Applicant.objects.get_or_create(user=request.user)
-    
+    user = request.user
+    applicant, created = Applicant.objects.get_or_create(user=user)
+
     if request.method == 'POST':
-        # Update the applicant's personal information
-        applicant.name = request.POST.get('name')
-        applicant.email = request.POST.get('email')
-        applicant.skills = request.POST.get('skills')
-        applicant.experience = request.POST.get('experience')
-        
-        # Update the resume if provided
-        if 'resume' in request.FILES:
-            applicant.resume = request.FILES['resume']
-        
-        # Save the updated applicant information
-        applicant.save()
+        print("Request POST data:", request.POST)  # Debug: Check if form data is being received
 
-        # Recalculate job recommendations based on the new skills
-        job_recommendations = calculate_job_recommendations(applicant.skills)
+        form = ApplicantProfileForm(request.POST, request.FILES, instance=applicant)
         
-        # Redirect to the profile page with updated job recommendations
-        return redirect('profile')  # Pass job_recommendations if needed
-        
-    # Get the current job recommendations
-    job_recommendations = calculate_job_recommendations(applicant.skills)
-    
-    # Render the template with the updated applicant information and job recommendations
-    return render(request, 'template_name.html', {
-        'applicant': applicant,
-        'job_recommendations': job_recommendations,
-    })
+        if form.is_valid():
+            form.save()  # Save the updated applicant data
+            messages.success(request, "Your personal information has been updated successfully.")
+            return redirect('profile')  # Redirect to profile page after successful update
+        else:
+            print("Form errors:", form.errors)  # Debug: Check form errors if not valid
+            return render(request, 'applicant/profile.html', {
+                'form': form,
+                'error': 'Please correct the errors in the form.'
+            })
 
+    else:
+        form = ApplicantProfileForm(instance=applicant)
+
+    return render(request, 'applicant/profile.html', {'form': form})
 
 
 @login_required  # Ensure the user is logged in
@@ -328,6 +327,8 @@ def job_match_history(request):
     
 
 
+
+
 def some_view(request):
     applicant = Applicant.objects.get(user=request.user)
     return render(request, 'template_name.html', {'applicant': applicant})
@@ -381,3 +382,65 @@ def view_applicant(request):
     else:
         # Show applicant-specific data
         return render(request, 'applicant_dashboard.html')
+
+def apply_now(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    applicant = get_object_or_404(Applicant, user=request.user)
+
+    if request.method == 'POST':
+        cover_letter = request.POST.get('cover_letter')
+
+        if cover_letter:
+            # Save the job application with the cover letter
+            job_application = JobApplication.objects.create(
+                applicant=applicant,
+                job=job,
+                cover_letter=cover_letter,
+            )
+
+            # Return a JSON response indicating success along with application data
+            data = {
+                'status': 'success',
+                'message': 'Your application has been submitted successfully.',
+                'applicant_name': job_application.applicant.name,
+                'job_role': job_application.job.job_role,
+                'status': job_application.status,
+                'application_date': job_application.application_date.strftime('%b %d, %Y, %I:%M %p'),
+                'application_id': job_application.id,  # Pass application_id in response
+            }
+
+            return JsonResponse(data)
+        else:
+            # If no cover letter is provided
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Cover letter is required.',
+            })
+
+    return render(request, 'applicant/apply_form.html', {
+        'job': job,
+        'applicant': applicant,
+    })
+
+
+def job_application_status(request, application_id):
+    jobapplication = get_object_or_404(JobApplication, id=application_id)
+    return render(request, 'applicant/job_application_status.html', {
+        'jobapplication': jobapplication
+    })
+
+
+def update_application_time(request, application_id):
+    if request.method == 'POST':
+        job_application = get_object_or_404(JobApplication, id=application_id)
+        
+        # Update the application date to the current time
+        job_application.application_date = now()
+        job_application.save()
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Application date updated successfully.',
+            'application_date': job_application.application_date.strftime('%b %d, %Y, %I:%M %p')
+        })
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})

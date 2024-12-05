@@ -57,21 +57,7 @@
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="{% url 'index' %}" class="nav-item nav-link active">Home</a>
             <a href="{% url 'about' %}" class="nav-item nav-link">About</a>
-            <!-- <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Jobs</a>
-                <div class="dropdown-menu rounded-0 m-0">
-                    <a href="{% url 'job-list' %}" class="dropdown-item">Job List</a>
-                    <a href="{% url 'job-detail' %}" class="dropdown-item">Job Detail</a>
-                </div>
-            </div> -->
-            <!-- <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                <div class="dropdown-menu rounded-0 m-0">
-                    <a href="category.html" class="dropdown-item">Job Category</a>
-                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                    <a href="404.html" class="dropdown-item">404</a>
-                </div>
-            </div> -->
+
             <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
         </div>
         <!-- Authentication Section -->
@@ -94,7 +80,7 @@
 
 
 
-     <!-- Carousel Start -->
+<!-- Carousel Start -->
 <div class="container-fluid p-0">
     <div class="owl-carousel header-carousel position-relative">
         <div class="owl-carousel-item position-relative">
@@ -105,23 +91,16 @@
                         <div class="col-10 col-lg-8">
                             <h1 class="display-3 text-white animated slideInDown mb-4">Find The Perfect Job at Trabahanap</h1>
                             <p class="fs-5 fw-medium text-white mb-4 pb-2">Discover your ideal job with Trabahanap. We connect talented individuals with top employers. Start your journey today!</p>
-                            <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Search A Job</a>
-                            <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Find A Talent</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="owl-carousel-item position-relative">
-            <img class="img-fluid" src="{% static 'img/carousel-2.jpg' %}" alt="">
-            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(43, 57, 64, .5);">
-                <div class="container">
-                    <div class="row justify-content-start">
-                        <div class="col-10 col-lg-8">
-                            <h1 class="display-3 text-white animated slideInDown mb-4">Explore The Best Startup Jobs at Trabahanap</h1>
-                            <p class="fs-5 fw-medium text-white mb-4 pb-2">At Trabahanap, we bring you exciting opportunities in the startup world. Find a job that suits your ambitions and skills!</p>
-                            <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Search A Job</a>
-                            <a href="" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Find A Talent</a>
+                            
+                           <!-- Conditional redirect based on authentication -->
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'profile' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Go to Profile</a>
+                            <a href="{% url 'profile' %}" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Find A Talent</a>
+                            {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Search A Job</a>
+                            <a href="{% url 'login' %}" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Find A Talent</a>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
@@ -129,6 +108,7 @@
         </div>
     </div>
 </div>
+<!-- Carousel End -->
 
 
         <!-- About Start -->
@@ -188,9 +168,9 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">Contact</h5>
-                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, Masipit, Calapan City</p>
                         <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                        <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                        <p class="mb-2"><i class="fa fa-envelope me-3"></i>trabahanap@gmail.com</p>
                         <div class="d-flex pt-2">
                             <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
                             <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>

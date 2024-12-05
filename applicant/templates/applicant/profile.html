@@ -8,7 +8,6 @@
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
@@ -57,13 +56,13 @@
                 </li>
                 <!-- Detailed Reports and History of Job Matches Button -->
                 <li class="nav-item" style="margin-bottom: -20px;">
-                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#jobMatchHistoryModal" style="font-size: 18px;">View Job Match History</a>
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#jobMatchHistoryModal" style="font-size: 18px;">Job Match History</a>
                 </li>
+            
                 <!-- Feedback Button -->
                 <li class="nav-item" style="margin-bottom: -20px;">
                     <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#feedbackModal" style="font-size: 18px;">Give Feedback</a>
                 </li>
-                
                 
             </ul>
         </div>
@@ -93,7 +92,7 @@
                 </div>                    
             </div>
         </div>
-
+        
         <style>
             /* Apply a slightly larger font size to the applicant information */
             .applicant-info p {
@@ -128,33 +127,42 @@
             }
         </style>
 
-        <!-- Job Recommendations Section -->
-        <div class="row job-recommendations">
-            <div class="col-md-12">
-                <h2 class="my-3">Job Recommendations</h2>  <!-- Reduced top margin for the title -->
-                {% if job_recommendations %}
-                    <div class="row">
-                        {% for job in job_recommendations %}
-                            <div class="col-lg-4 col-md-6 mb-3">  <!-- Reduced margin-bottom here -->
-                                <div class="card shadow-sm h-100">
-                                    <div class="card-body">
-                                        <h4 class="card-title">{{ job.job_role }}</h4>
-                                        <p class="card-text"><strong>Company:</strong> {{ job.company }}</p>
-                                        <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
-                                        <p class="card-text"><strong>Experience Required:</strong> {{ job.job_experience }}</p>
-                                        <p class="card-text"><strong>Skills/Description:</strong> {{ job.skills_description|truncatewords:30 }}</p>
-                                    </div>
-                                </div>
+<!-- Job Recommendations Section -->
+<div class="row job-recommendations">
+    <div class="col-md-12">
+        <h2 class="my-3">Job Recommendations</h2> <!-- Reduced top margin for the title -->
+        {% if job_recommendations %}
+            <div class="row">
+                {% for job in job_recommendations %}
+                    <div class="col-lg-4 col-md-6 mb-3"> <!-- Reduced margin-bottom here -->
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ job.job_role }}</h4>
+                                <p class="card-text"><strong>Company:</strong> {{ job.company }}</p>
+                                <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
+                                <p class="card-text"><strong>Experience Required:</strong> {{ job.job_experience }}</p>
+                                <p class="card-text"><strong>Skills/Description:</strong> {{ job.skills_description|truncatewords:30 }}</p>
+                                <!-- Apply Now Button -->
+                                <a href="{% url 'apply_now' job.id %}" class="btn btn-primary mt-3">Apply Now</a>
                             </div>
-                        {% endfor %}
+                        </div>
                     </div>
-                {% else %}
-                    <p>No job recommendations available.</p>
-                {% endif %}
+                {% endfor %}
             </div>
-        </div>
+        {% else %}
+            <p>No job recommendations available.</p>
+        {% endif %}
+    </div>
+</div>
+
     {% endblock %}
 </div>
+
+  <!-- Footer -->
+  <footer class="bg-light text-center py-4">
+    <p class="mb-0">&copy; 2024 Trabahanap. All Rights Reserved.</p>
+</footer>
+
 
 <!-- Custom Styles for Layout -->
 <style>
@@ -207,6 +215,7 @@
   }
 </style>
 
+<!-- Modal Form -->
 <div class="modal fade" id="personalInfoModal" tabindex="-1" aria-labelledby="personalInfoModalLabel" aria-hidden="true">
     <div class="modal-dialog custom-modal-size">
         <div class="modal-content">
@@ -215,7 +224,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" enctype="multipart/form-data">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'edit_personal_info' %}">
                     {% csrf_token %}
                     <!-- Full Name -->
                     <div class="row mb-3">
@@ -272,6 +281,7 @@
                                 placeholder="Describe your experience">{{ applicant.experience }}</textarea>
                         </div>
                     </div>
+
                     <!-- Submit Button -->
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -281,7 +291,7 @@
         </div>
     </div>
 </div>
-</div>
+
 
 
 <!-- Feedback Modal -->
@@ -325,7 +335,7 @@
 
 <!-- Job Match History Modal -->
 <div class="modal fade" id="jobMatchHistoryModal" tabindex="-1" aria-labelledby="jobMatchHistoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen"> <!-- Fullscreen modal class -->
+    <div class="modal-dialog"> <!-- Removed fullscreen class -->
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="jobMatchHistoryModalLabel">Job Match History</h5>
@@ -356,8 +366,10 @@
         </div>
       </div>
     </div>
-  </div>
-  
+</div>
+
+<!-- Ensure you're including Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
 
 
 <script>
@@ -395,38 +407,31 @@
 
 </script>
 
-
-
 <style>
     /* Ensure consistent font size for inputs, textareas, and their placeholders */
     .form-control, .form-control::placeholder {
         font-size: 1rem;  /* Set a standard font size for inputs and placeholders */
         padding: 10px;    /* Padding inside the fields for better alignment */
     }
-
     /* Adjust textareas height and font size */
     .form-control[rows] {
         height: auto;
         padding: 10px;
     }
-
     /* Set consistent styling for the modal */
     .modal-dialog.custom-modal-size {
         max-width: 600px;  /* Adjust max-width of the modal */
         width: 100%;       /* Ensure it uses full available width, but not too wide */
     }
-
     /* Modal content adjustments */
     .modal-content {
         border-radius: 8px;  /* Rounded corners for the modal */
     }
-
     /* Consistent height and padding for buttons */
     .modal-footer .btn {
         padding: 10px 20px;
         font-size: 1rem;
     }
-
     /* Placeholder specific style for textareas and inputs */
     .form-control::placeholder {
         color: #999; /* Light grey placeholder color */
@@ -500,18 +505,16 @@
             spinner.style.display = "flex"; // Show spinner when form is submitted
         });
     }
-
     if (spinner) {
         spinner.style.display = "none"; // Hide spinner after recommendations load
     }
 });
 
 
-  </script>
-  
+
+
+    </script> 
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </body>
 </html>
