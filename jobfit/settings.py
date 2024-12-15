@@ -38,6 +38,9 @@ ALLOWED_HOSTS = [
 
 
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://trabahanap-job-matching-analyzer.onrender.com',
+]
 
 # Application definition
 
