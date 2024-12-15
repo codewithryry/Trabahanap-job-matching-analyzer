@@ -25,7 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xbz7fydv)62dw4ga(4%89nyl05fotrj2spa5!0p)$q=q(@ap@*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+
 ALLOWED_HOSTS = [
     'trabahanap-job-matching-analyzer.onrender.com',  # Render app hostname
     'localhost',  # For local development
